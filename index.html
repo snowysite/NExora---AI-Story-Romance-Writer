@@ -3,648 +3,607 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NExora - Budget Calculator</title>
+    <title>NExora - AI Story & Romance Writer</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+   
 </head>
 <body class="bg-black text-white min-h-screen">
-    <!-- Loader -->
-    <div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <div class="text-center">
-            <div class="loader mx-auto mb-6"></div>
-            <h2 class="text-3xl font-bold text-orangered mb-2">NExora</h2>
-            <p class="text-gray-400">Loading Budget Calculator...</p>
-        </div>
-    </div>
-
     <!-- Header -->
-    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
+    <header class="gradient-bg py-6 sticky top-0 z-50">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <h1 class="text-3xl font-bold text-orangered">NExora</h1>
-                    <span class="text-gray-400">|</span>
-                    <span class="text-xl font-semibold">Budget Calculator</span>
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center float">
+                        <span class="text-2xl">✨</span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">NExora</h1>
+                        <p class="text-white/80">AI Story & Romance Writer</p>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="exportData()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm transition-colors">
-                        Export Data
+                    <button onclick="showHistory()" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors">
+                        📚 My Stories
                     </button>
-                    <button onclick="resetCalculator()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition-colors">
-                        Reset All
+                    <button onclick="toggleTheme()" class="p-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors">
+                        🌙
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-6 py-8">
-        <!-- Dashboard Overview -->
-        <div class="grid lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gray-900 rounded-2xl p-6 card-hover slide-up">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-300">Total Income</h3>
-                    <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
+    <!-- Hero Section -->
+    <section class="py-16 text-center fade-in">
+        <div class="container mx-auto px-6">
+            <h2 class="text-5xl md:text-7xl font-bold mb-6">
+                Create Amazing
+                <span class="gradient-text block">Stories & Messages</span>
+            </h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Whether you need an epic adventure story or the perfect romantic message, 
+                NExora's AI will help you create something magical! ✨
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="showStoryGenerator()" class="px-8 py-4 bg-orangered hover:bg-red-600 text-white font-semibold rounded-lg transition-all transform hover:scale-105 sparkle">
+                    📖 Generate Story
+                </button>
+                <button onclick="showRomanceWriter()" class="px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 sparkle">
+                    💕 Write Romance
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-12">
+        <!-- Mode Selection -->
+        <div id="mode-selection" class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Story Generator Card -->
+            <div class="story-card rounded-2xl p-8 card-hover cursor-pointer" onclick="showStoryGenerator()">
+                <div class="text-center">
+                    <div class="text-6xl mb-4 float">📚</div>
+                    <h3 class="text-2xl font-bold mb-4 text-orangered">Story Generator</h3>
+                    <p class="text-gray-300 mb-6">Create epic adventures, mysteries, sci-fi tales, and more! Perfect for creative writing and entertainment.</p>
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-3 py-1 bg-orangered/20 text-orangered rounded-full text-sm">Adventure</span>
+                        <span class="px-3 py-1 bg-orangered/20 text-orangered rounded-full text-sm">Mystery</span>
+                        <span class="px-3 py-1 bg-orangered/20 text-orangered rounded-full text-sm">Fantasy</span>
+                        <span class="px-3 py-1 bg-orangered/20 text-orangered rounded-full text-sm">Sci-Fi</span>
                     </div>
                 </div>
-                <p class="text-3xl font-bold text-green-400 counter" id="total-income">$0.00</p>
-                <p class="text-sm text-gray-400 mt-2">Monthly income</p>
             </div>
 
-            <div class="bg-gray-900 rounded-2xl p-6 card-hover slide-up" style="animation-delay: 0.1s">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-300">Total Expenses</h3>
-                    <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                        </svg>
+            <!-- Romance Writer Card -->
+            <div class="romance-card rounded-2xl p-8 card-hover cursor-pointer" onclick="showRomanceWriter()">
+                <div class="text-center">
+                    <div class="text-6xl mb-4 heart-beat">💕</div>
+                    <h3 class="text-2xl font-bold mb-4 text-pink-400">Romance Writer</h3>
+                    <p class="text-gray-300 mb-6">Craft the perfect romantic messages, love letters, and sweet texts that will make hearts flutter!</p>
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-3 py-1 bg-pink-600/20 text-pink-400 rounded-full text-sm">Love Letters</span>
+                        <span class="px-3 py-1 bg-pink-600/20 text-pink-400 rounded-full text-sm">Sweet Texts</span>
+                        <span class="px-3 py-1 bg-pink-600/20 text-pink-400 rounded-full text-sm">Poems</span>
+                        <span class="px-3 py-1 bg-pink-600/20 text-pink-400 rounded-full text-sm">Proposals</span>
                     </div>
                 </div>
-                <p class="text-3xl font-bold text-red-400 counter" id="total-expenses">$0.00</p>
-                <p class="text-sm text-gray-400 mt-2">Monthly expenses</p>
-            </div>
-
-            <div class="bg-gray-900 rounded-2xl p-6 card-hover slide-up" style="animation-delay: 0.2s">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-300">Net Balance</h3>
-                    <div class="w-12 h-12 bg-orangered rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-3xl font-bold text-orangered counter" id="net-balance">$0.00</p>
-                <p class="text-sm text-gray-400 mt-2">Remaining budget</p>
-            </div>
-
-            <div class="bg-gray-900 rounded-2xl p-6 card-hover slide-up" style="animation-delay: 0.3s">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-300">Savings Rate</h3>
-                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
-                    </div>
-                </div>
-                <p class="text-3xl font-bold text-blue-400 counter" id="savings-rate">0%</p>
-                <p class="text-sm text-gray-400 mt-2">Of total income</p>
             </div>
         </div>
 
-        <div class="grid lg:grid-cols-3 gap-8">
-            <!-- Income Section -->
-            <div class="bg-gray-900 rounded-2xl p-6 scale-in">
-                <h3 class="text-xl font-bold text-green-400 mb-6 flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Income Sources
+        <!-- Story Generator Interface -->
+        <div id="story-generator" class="hidden">
+            <div class="bg-gray-900 rounded-2xl p-8 mb-8 slide-in">
+                <h3 class="text-3xl font-bold mb-6 text-center">
+                    <span class="text-6xl mr-4">📖</span>
+                    Story Generator
                 </h3>
                 
-                <form id="income-form" class="mb-6">
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <input type="text" id="income-source" placeholder="Income source" class="p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-green-400 focus:outline-none input-focus" required>
-                        <input type="number" id="income-amount" placeholder="Amount" step="0.01" class="p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-green-400 focus:outline-none input-focus" required>
+                <form id="story-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-orangered">Story Genre</label>
+                            <select id="story-genre" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none">
+                                <option value="adventure">🗡️ Adventure</option>
+                                <option value="mystery">🔍 Mystery</option>
+                                <option value="fantasy">🧙‍♂️ Fantasy</option>
+                                <option value="sci-fi">🚀 Sci-Fi</option>
+                                <option value="horror">👻 Horror</option>
+                                <option value="comedy">😂 Comedy</option>
+                                <option value="drama">🎭 Drama</option>
+                                <option value="romance">💖 Romance</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-orangered">Story Length</label>
+                            <select id="story-length" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none">
+                                <option value="short">📝 Short (1-2 paragraphs)</option>
+                                <option value="medium">📄 Medium (3-5 paragraphs)</option>
+                                <option value="long">📚 Long (6+ paragraphs)</option>
+                            </select>
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                        Add Income
-                    </button>
-                </form>
-                
-                <div id="income-list" class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
-                    <div class="text-center text-gray-400 py-4">
-                        <p>No income sources added yet</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Expenses Section -->
-            <div class="bg-gray-900 rounded-2xl p-6 scale-in" style="animation-delay: 0.1s">
-                <h3 class="text-xl font-bold text-red-400 mb-6 flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                    </svg>
-                    Expenses
-                </h3>
-                
-                <form id="expense-form" class="mb-6">
-                    <div class="grid grid-cols-1 gap-4 mb-4">
-                        <input type="text" id="expense-category" placeholder="Expense category" class="p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-red-400 focus:outline-none input-focus" required>
-                        <input type="number" id="expense-amount" placeholder="Amount" step="0.01" class="p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-red-400 focus:outline-none input-focus" required>
-                        <select id="expense-type" class="p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-red-400 focus:outline-none">
-                            <option value="fixed">Fixed Expense</option>
-                            <option value="variable">Variable Expense</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                        Add Expense
-                    </button>
-                </form>
-                
-                <div id="expense-list" class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
-                    <div class="text-center text-gray-400 py-4">
-                        <p>No expenses added yet</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Budget Analysis -->
-            <div class="bg-gray-900 rounded-2xl p-6 scale-in" style="animation-delay: 0.2s">
-                <h3 class="text-xl font-bold text-orangered mb-6 flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                    Budget Analysis
-                </h3>
-                
-                <div class="space-y-6">
+                    
                     <div>
-                        <div class="flex justify-between text-sm mb-2">
-                            <span>Budget Health</span>
-                            <span id="budget-health-percent">0%</span>
-                        </div>
-                        <div class="bg-gray-700 rounded-full h-3">
-                            <div id="budget-health-bar" class="bg-orangered h-3 rounded-full progress-animate" style="width: 0%"></div>
-                        </div>
-                        <p id="budget-status" class="text-sm text-gray-400 mt-2">Add income and expenses to see analysis</p>
+                        <label class="block text-sm font-medium mb-2 text-orangered">Main Character</label>
+                        <input type="text" id="main-character" placeholder="e.g., Alex, a brave teenager" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none">
                     </div>
                     
-                    <div class="bg-gray-800 rounded-lg p-4">
-                        <h4 class="font-semibold mb-3 text-orangered">Recommendations</h4>
-                        <div id="recommendations" class="text-sm text-gray-300 space-y-2">
-                            <p>• Add your income sources to get started</p>
-                            <p>• Track both fixed and variable expenses</p>
-                            <p>• Aim for 20% savings rate</p>
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-orangered">Setting/Location</label>
+                        <input type="text" id="story-setting" placeholder="e.g., a mysterious forest, futuristic city, haunted mansion" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-orangered">Special Elements (Optional)</label>
+                        <input type="text" id="special-elements" placeholder="e.g., magic powers, alien technology, ancient curse" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orangered hover:bg-red-600 text-white font-bold py-4 px-8 rounded-lg transition-all transform hover:scale-105 sparkle">
+                        ✨ Generate My Story
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Romance Writer Interface -->
+        <div id="romance-writer" class="hidden">
+            <div class="bg-gray-900 rounded-2xl p-8 mb-8 slide-in">
+                <h3 class="text-3xl font-bold mb-6 text-center">
+                    <span class="text-6xl mr-4 heart-beat">💕</span>
+                    Romance Writer
+                </h3>
+                
+                <form id="romance-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-pink-400">Message Type</label>
+                            <select id="romance-type" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-pink-400 focus:outline-none">
+                                <option value="sweet-text">💬 Sweet Text Message</option>
+                                <option value="love-letter">💌 Love Letter</option>
+                                <option value="poem">📝 Romantic Poem</option>
+                                <option value="good-morning">🌅 Good Morning Message</option>
+                                <option value="good-night">🌙 Good Night Message</option>
+                                <option value="apology">🙏 Apology Message</option>
+                                <option value="anniversary">🎉 Anniversary Message</option>
+                                <option value="proposal">💍 Proposal</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-pink-400">Tone</label>
+                            <select id="romance-tone" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-pink-400 focus:outline-none">
+                                <option value="sweet">🍯 Sweet & Cute</option>
+                                <option value="passionate">🔥 Passionate</option>
+                                <option value="playful">😊 Playful & Fun</option>
+                                <option value="deep">💭 Deep & Meaningful</option>
+                                <option value="casual">😎 Casual & Friendly</option>
+                            </select>
                         </div>
                     </div>
                     
-                    <div class="bg-gray-800 rounded-lg p-4">
-                        <h4 class="font-semibold mb-3 text-orangered">Quick Actions</h4>
-                        <div class="space-y-2">
-                            <button onclick="setGoal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm transition-colors">
-                                Set Savings Goal
-                            </button>
-                            <button onclick="generateReport()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg text-sm transition-colors">
-                                Generate Report
-                            </button>
-                        </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-pink-400">Their Name</label>
+                        <input type="text" id="partner-name" placeholder="e.g., Sarah, Alex, Jamie" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-pink-400 focus:outline-none">
                     </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-pink-400">What You Love About Them</label>
+                        <input type="text" id="love-about" placeholder="e.g., their smile, sense of humor, kindness" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-pink-400 focus:outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-pink-400">Special Memory (Optional)</label>
+                        <input type="text" id="special-memory" placeholder="e.g., our first date, when we met, last weekend together" class="w-full p-4 bg-gray-800 border border-gray-700 rounded-lg focus:border-pink-400 focus:outline-none">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 px-8 rounded-lg transition-all transform hover:scale-105 sparkle">
+                        💕 Create My Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden">
+            <div class="bg-gray-900 rounded-2xl p-8 mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold" id="results-title">Your Creation</h3>
+                    <div class="flex space-x-3">
+                        <button onclick="copyResult()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                            📋 Copy
+                        </button>
+                        <button onclick="saveResult()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                            💾 Save
+                        </button>
+                        <button onclick="shareResult()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="result-content" class="bg-gray-800 rounded-lg p-6 mb-6 custom-scrollbar max-h-96 overflow-y-auto">
+                    <!-- Generated content will appear here -->
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="regenerateResult()" class="flex-1 bg-orangered hover:bg-red-600 text-white py-3 px-6 rounded-lg transition-colors">
+                        🔄 Generate Another
+                    </button>
+                    <button onclick="goBack()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-lg transition-colors">
+                        ← Back to Options
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Section -->
-        <div class="grid lg:grid-cols-2 gap-8 mt-8">
-            <div class="bg-gray-900 rounded-2xl p-6 fade-in">
-                <h3 class="text-xl font-bold text-orangered mb-6">Expense Breakdown</h3>
-                <div class="h-64">
-                    <canvas id="expense-chart"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-gray-900 rounded-2xl p-6 fade-in">
-                <h3 class="text-xl font-bold text-orangered mb-6">Income vs Expenses</h3>
-                <div class="h-64">
-                    <canvas id="comparison-chart"></canvas>
-                </div>
+        <!-- Quick Prompts -->
+        <div id="quick-prompts" class="mb-12">
+            <h3 class="text-2xl font-bold mb-6 text-center">✨ Quick Ideas</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button onclick="useQuickPrompt('story', 'A teenager discovers they have magical powers on their 16th birthday')" class="p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-left">
+                    <div class="text-2xl mb-2">🧙‍♂️</div>
+                    <p class="text-sm">Magical Powers Discovery</p>
+                </button>
+                
+                <button onclick="useQuickPrompt('story', 'Two best friends get trapped in a video game world')" class="p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-left">
+                    <div class="text-2xl mb-2">🎮</div>
+                    <p class="text-sm">Video Game Adventure</p>
+                </button>
+                
+                <button onclick="useQuickPrompt('romance', 'good morning message for someone special')" class="p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-left">
+                    <div class="text-2xl mb-2">🌅</div>
+                    <p class="text-sm">Good Morning Text</p>
+                </button>
+                
+                <button onclick="useQuickPrompt('romance', 'sweet message after first date')" class="p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-left">
+                    <div class="text-2xl mb-2">💕</div>
+                    <p class="text-sm">After First Date</p>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Goal Setting Modal -->
-    <div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-gray-900 rounded-2xl p-8 max-w-md w-full mx-4 scale-in">
-            <h3 class="text-2xl font-bold text-orangered mb-6">Set Savings Goal</h3>
-            <form id="goal-form">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Goal Amount ($)</label>
-                        <input type="number" id="goal-amount" step="0.01" class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Target Date</label>
-                        <input type="date" id="goal-date" class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-orangered focus:outline-none" required>
-                    </div>
-                    <div class="flex space-x-4 pt-4">
-                        <button type="button" onclick="closeGoalModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-lg transition-colors">
-                            Cancel
-                        </button>
-                        <button type="submit" class="flex-1 bg-orangered hover:bg-red-600 text-white py-3 rounded-lg transition-colors">
-                            Set Goal
-                        </button>
-                    </div>
-                </div>
-            </form>
+    <!-- History Modal -->
+    <div id="history-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-900 rounded-2xl p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">📚 My Stories & Messages</h3>
+                <button onclick="closeHistory()" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="history-content" class="space-y-4">
+                <!-- History items will be loaded here -->
+            </div>
         </div>
     </div>
 
     <script>
         // Global variables
-        let incomes = JSON.parse(localStorage.getItem('nexora-incomes')) || [];
-        let expenses = JSON.parse(localStorage.getItem('nexora-expenses')) || [];
-        let savingsGoal = JSON.parse(localStorage.getItem('nexora-goal')) || null;
-        let expenseChart, comparisonChart;
+        let currentMode = '';
+        let currentResult = '';
+        let savedItems = JSON.parse(localStorage.getItem('nexora-saved-items')) || [];
 
         // Initialize app
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    initializeApp();
-                }, 500);
-            }, 1500); // Reduced loader time
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('story-form').addEventListener('submit', generateStory);
+            document.getElementById('romance-form').addEventListener('submit', generateRomance);
         });
 
-        function initializeApp() {
-            renderIncomes();
-            renderExpenses();
-            updateDashboard();
-            initializeCharts();
-            
-            // Add event listeners
-            document.getElementById('income-form').addEventListener('submit', addIncome);
-            document.getElementById('expense-form').addEventListener('submit', addExpense);
-            document.getElementById('goal-form').addEventListener('submit', setSavingsGoal);
+        // Mode switching
+        function showStoryGenerator() {
+            currentMode = 'story';
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('story-generator').classList.remove('hidden');
+            document.getElementById('romance-writer').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
         }
 
-        // Income management
-        function addIncome(e) {
+        function showRomanceWriter() {
+            currentMode = 'romance';
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('story-generator').classList.add('hidden');
+            document.getElementById('romance-writer').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('mode-selection').classList.remove('hidden');
+            document.getElementById('story-generator').classList.add('hidden');
+            document.getElementById('romance-writer').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+        }
+
+        // Story generation
+        function generateStory(e) {
             e.preventDefault();
-            console.log('Add income function called'); // Debug log
             
-            const source = document.getElementById('income-source').value.trim();
-            const amount = parseFloat(document.getElementById('income-amount').value);
+            const genre = document.getElementById('story-genre').value;
+            const length = document.getElementById('story-length').value;
+            const character = document.getElementById('main-character').value || 'Alex';
+            const setting = document.getElementById('story-setting').value || 'a mysterious place';
+            const elements = document.getElementById('special-elements').value;
+
+            showLoading('Crafting your amazing story...');
             
-            console.log('Source:', source, 'Amount:', amount); // Debug log
+            setTimeout(() => {
+                const story = createStory(genre, length, character, setting, elements);
+                showResult(story, 'Your Amazing Story', '📖');
+            }, 2000 + Math.random() * 2000);
+        }
 
-            if (source && amount > 0) {
-                const newIncome = {
-                    id: Date.now(),
-                    source: source,
-                    amount: amount,
-                    createdAt: new Date().toISOString()
-                };
+        function createStory(genre, length, character, setting, elements) {
+            const storyTemplates = {
+                adventure: [
+                    `${character} had always dreamed of adventure, but nothing could have prepared them for what happened when they discovered ${setting}. The ancient map tucked away in their grandmother's attic had seemed like just another dusty relic, but as ${character} traced the faded lines with their finger, the parchment began to glow with an otherworldly light.`,
+                    
+                    `Without warning, the world around ${character} shifted and swirled like paint in water. When the dizziness subsided, they found themselves standing in ${setting}, exactly as the map had depicted. The air hummed with magic, and ${character} could feel that their life would never be the same.`,
+                    
+                    `${elements ? `Armed with ${elements}, ` : ''}${character} took their first tentative steps into this new world. Strange creatures watched from the shadows, some curious, others clearly hostile. But ${character} had come too far to turn back now. This was the adventure they had always been meant to find.`
+                ],
+                
+                mystery: [
+                    `The message arrived at exactly midnight, just as ${character} was about to go to sleep. The envelope bore no return address, only their name written in elegant script that seemed to shimmer in the moonlight. Inside, a single line: "Meet me at ${setting} if you want to know the truth about what happened that night."`,
+                    
+                    `${character}'s hands trembled as they read the words again. That night – everyone said it was just an accident, but ${character} had always suspected there was more to the story. ${elements ? `The ${elements} they had found at the scene` : 'The strange details that never added up'} had haunted their dreams for months.`,
+                    
+                    `As ${character} made their way through the darkness toward ${setting}, they couldn't shake the feeling that they were being watched. Every shadow seemed to hide a secret, every sound could be a clue. Tonight, finally, they would learn the truth – no matter how dangerous it might be.`
+                ],
+                
+                fantasy: [
+                    `On the morning of their sixteenth birthday, ${character} woke to find that ${setting} had completely transformed overnight. Where once there had been ordinary surroundings, now ancient trees with silver bark stretched toward a sky painted in impossible shades of purple and gold.`,
+                    
+                    `${elements ? `The ${elements} that had appeared on their nightstand` : 'A strange tingling in their fingertips'} confirmed what ${character} had begun to suspect – magic was real, and somehow, they were connected to it. As they stepped outside, creatures of legend began to emerge from the transformed landscape: unicorns with manes like starlight, dragons no bigger than hummingbirds, and wise old owls that spoke in riddles.`,
+                    
+                    `"Welcome, young one," said a voice like wind chimes. A figure materialized from the morning mist – tall, ethereal, with eyes that held the wisdom of centuries. "We have been waiting for you. Your true journey begins now, in the realm where dreams and reality dance together."`
+                ],
+                
+                'sci-fi': [
+                    `The notification on ${character}'s phone was unlike anything they had ever seen. Instead of the usual blue glow, the screen pulsed with colors that didn't seem to exist in nature. The message was simple but impossible: "Temporal displacement detected. Report to ${setting} immediately for debriefing."`,
+                    
+                    `${character} had always been good with technology, but this was beyond anything they understood. ${elements ? `The ${elements} they had been working on in their garage` : 'Their latest invention'} must have done something to the fabric of space-time itself. As they made their way to the coordinates, the world around them began to flicker like a glitching video game.`,
+                    
+                    `At ${setting}, ${character} found a portal crackling with energy, and through it, they could see glimpses of other worlds, other times. A figure in a silver suit stepped through, their face hidden behind a helmet that reflected infinite possibilities. "Congratulations," they said, their voice echoing strangely. "You've just become the youngest member of the Temporal Protection Agency."`
+                ]
+            };
 
-                incomes.push(newIncome);
-                console.log('Income added:', newIncome); // Debug log
-                saveData();
-                renderIncomes();
-                updateDashboard();
+            let story = storyTemplates[genre] || storyTemplates.adventure;
+            
+            if (length === 'short') {
+                story = [story[0], story[2]];
+            } else if (length === 'long') {
+                story.push(`As ${character} stood at the threshold of this new chapter in their life, they realized that everything they thought they knew about the world was just the beginning. The real adventure was about to start, and they were ready for whatever came next.`);
+                story.push(`Little did ${character} know that their actions today would echo through time itself, changing not just their own destiny, but the fate of everyone they cared about. The story of ${character} was just beginning, and it would be more extraordinary than they could ever imagine.`);
+            }
+            
+            return story.join('\n\n');
+        }
+
+        // Romance generation
+        function generateRomance(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('romance-type').value;
+            const tone = document.getElementById('romance-tone').value;
+            const name = document.getElementById('partner-name').value || 'beautiful';
+            const loveAbout = document.getElementById('love-about').value || 'everything about you';
+            const memory = document.getElementById('special-memory').value;
+
+            showLoading('Creating your perfect message...');
+            
+            setTimeout(() => {
+                const message = createRomanceMessage(type, tone, name, loveAbout, memory);
+                showResult(message, 'Your Romantic Message', '💕');
+            }, 1500 + Math.random() * 1500);
+        }
+
+        function createRomanceMessage(type, tone, name, loveAbout, memory) {
+            const messages = {
+                'sweet-text': {
+                    sweet: `Hey ${name} 💕 Just wanted to let you know that you're the first thing I think about when I wake up and the last thing on my mind before I sleep. Your ${loveAbout} makes every day brighter! Hope you're having an amazing day, beautiful! ✨`,
+                    passionate: `${name}, you set my heart on fire every single day 🔥 I can't get enough of your ${loveAbout}. You're not just my love, you're my everything, my reason for smiling, my favorite hello and hardest goodbye 💖`,
+                    playful: `Guess what, ${name}? 😊 You're stuck with me because I'm totally obsessed with your ${loveAbout}! Warning: I might randomly text you cute things all day because you're just too amazing not to! 🥰`,
+                    deep: `${name}, in a world full of temporary things, you are my constant. Your ${loveAbout} reminds me every day what true love feels like. Thank you for being my safe place, my home 🏠💕`,
+                    casual: `Hey ${name}! 😎 Just thinking about your ${loveAbout} and couldn't help but smile. You're pretty awesome, you know that? Hope your day is as cool as you are! 🌟`
+                },
                 
-                // Reset form
-                document.getElementById('income-form').reset();
+                'love-letter': {
+                    sweet: `My dearest ${name},\n\nAs I write this letter, my heart is overflowing with love for you. Every day with you feels like a beautiful dream that I never want to wake up from. Your ${loveAbout} captivates me in ways I never thought possible.\n\n${memory ? `I keep thinking about ${memory} and how perfect that moment was.` : 'Every moment we share becomes a treasured memory.'} You have this incredible way of making ordinary days feel magical.\n\nI love you more than words could ever express.\n\nForever yours,\n[Your name] 💕`,
+                    passionate: `My beloved ${name},\n\nYou are the fire in my soul, the passion in my heart, the very air I breathe. Your ${loveAbout} drives me wild with desire and fills me with a love so intense it takes my breath away.\n\n${memory ? `Since ${memory}, I knew you were the one` : 'From the moment I met you, I knew'} who would change my life forever. You are my everything, my reason for being, my greatest love story.\n\nI am completely, utterly, passionately yours.\n\nWith all my love,\n[Your name] 🔥💖`
+                },
                 
-                // Show success animation
-                showNotification('Income added successfully!', 'success');
+                'poem': {
+                    sweet: `For ${name} 🌹\n\nYour ${loveAbout} lights up my world,\nLike stars dancing in the night.\nWith you, my heart feels unfurled,\nEverything just feels so right.\n\n${memory ? `I think of ${memory},\nAnd smile with pure delight.` : 'Each day brings new joy,\nYour love is my guiding light.'}\n\nYou're my sunshine, my moon above,\nMy sweetest, truest love. 💕`,
+                    passionate: `To ${name}, my burning flame 🔥\n\nYour ${loveAbout} sets my soul ablaze,\nA fire that will never die.\nIn your love, I am amazed,\nWith you, I learn to fly.\n\n${memory ? `Since ${memory} came to be,\nMy heart has been your prize.` : 'You are my destiny,\nThe passion in my eyes.'}\n\nForever burning bright and true,\nMy heart belongs to you. 💖`
+                },
+                
+                'good-morning': {
+                    sweet: `Good morning, sunshine! ☀️ Waking up knowing I get to talk to you today makes everything better. Your ${loveAbout} is the first thing that makes me smile each morning. Hope your day is as wonderful as you are, ${name}! 💕`,
+                    playful: `Rise and shine, ${name}! 🌅 The world is ready for your amazing ${loveAbout} to brighten everyone's day! I'm already excited to hear about all the awesome things you're going to do today! 😊✨`,
+                    casual: `Morning ${name}! ☕ Hope you slept well and are ready to be your awesome self today. Your ${loveAbout} always makes my mornings better! Have a great day! 🌟`
+                },
+                
+                'good-night': {
+                    sweet: `Sweet dreams, ${name} 🌙 As you drift off to sleep, know that you're the most beautiful part of my day. Your ${loveAbout} fills my heart with so much joy. Sleep tight, beautiful! 💕✨`,
+                    passionate: `Good night, my love 🌙 As the stars watch over you tonight, know that my heart beats only for you. Your ${loveAbout} is my last thought before I sleep and my first when I wake. Dream of us 💖`,
+                    playful: `Nighty night, ${name}! 🌙 Time for you to recharge that amazing ${loveAbout} for another day of being absolutely incredible! Sweet dreams, superstar! 😴💫`
+                }
+            };
+
+            const toneMessages = messages[type];
+            if (toneMessages && toneMessages[tone]) {
+                return toneMessages[tone];
+            }
+
+            // Fallback message
+            return `Hey ${name}! 💕 I just wanted to tell you how much your ${loveAbout} means to me. ${memory ? `Thinking about ${memory} always makes me smile.` : 'You make every day special.'} You're absolutely amazing! ✨`;
+        }
+
+        // Results handling
+        function showResult(content, title, icon) {
+            currentResult = content;
+            document.getElementById('results-title').innerHTML = `${icon} ${title}`;
+            document.getElementById('result-content').innerHTML = `<p class="whitespace-pre-wrap leading-relaxed">${content}</p>`;
+            
+            document.getElementById('story-generator').classList.add('hidden');
+            document.getElementById('romance-writer').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            hideLoading();
+        }
+
+        function copyResult() {
+            navigator.clipboard.writeText(currentResult);
+            showNotification('Copied to clipboard! 📋', 'success');
+        }
+
+        function saveResult() {
+            const item = {
+                id: Date.now(),
+                content: currentResult,
+                type: currentMode,
+                timestamp: new Date().toISOString(),
+                title: currentMode === 'story' ? 'Story' : 'Romance Message'
+            };
+            
+            savedItems.unshift(item);
+            localStorage.setItem('nexora-saved-items', JSON.stringify(savedItems));
+            showNotification('Saved to your collection! 💾', 'success');
+        }
+
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Created with NExora',
+                    text: currentResult
+                });
             } else {
-                console.log('Invalid input - source or amount missing'); // Debug log
-                showNotification('Please enter both income source and amount', 'error');
+                copyResult();
+                showNotification('Copied for sharing! 📤', 'info');
             }
         }
 
-        function renderIncomes() {
-            const container = document.getElementById('income-list');
+        function regenerateResult() {
+            if (currentMode === 'story') {
+                generateStory({ preventDefault: () => {} });
+            } else {
+                generateRomance({ preventDefault: () => {} });
+            }
+        }
+
+        // Quick prompts
+        function useQuickPrompt(type, prompt) {
+            if (type === 'story') {
+                showStoryGenerator();
+                document.getElementById('main-character').value = 'Alex';
+                document.getElementById('story-setting').value = prompt.includes('video game') ? 'a digital world' : 'a magical realm';
+                document.getElementById('special-elements').value = prompt.includes('magical') ? 'newfound magical abilities' : 'gaming skills';
+            } else {
+                showRomanceWriter();
+                if (prompt.includes('good morning')) {
+                    document.getElementById('romance-type').value = 'good-morning';
+                } else {
+                    document.getElementById('romance-type').value = 'sweet-text';
+                }
+            }
+        }
+
+        // History management
+        function showHistory() {
+            const modal = document.getElementById('history-modal');
+            const content = document.getElementById('history-content');
             
-            if (incomes.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-400 py-4">
-                        <p>No income sources added yet</p>
+            if (savedItems.length === 0) {
+                content.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <div class="text-6xl mb-4">📚</div>
+                        <p>No saved stories or messages yet!</p>
+                        <p class="text-sm mt-2">Create something amazing and save it to see it here.</p>
                     </div>
                 `;
-                return;
-            }
-
-            container.innerHTML = incomes.map(income => `
-                <div class="bg-gray-800 p-4 rounded-lg flex justify-between items-center fade-in">
-                    <div>
-                        <p class="font-semibold">${income.source}</p>
-                        <p class="text-sm text-gray-400">${formatDate(income.createdAt)}</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-green-400 font-bold">$${income.amount.toFixed(2)}</span>
-                        <button onclick="deleteIncome(${income.id})" class="text-red-400 hover:text-red-300 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function deleteIncome(id) {
-            incomes = incomes.filter(income => income.id !== id);
-            saveData();
-            renderIncomes();
-            updateDashboard();
-            showNotification('Income deleted', 'info');
-        }
-
-        // Expense management
-        function addExpense(e) {
-            e.preventDefault();
-            console.log('Add expense function called'); // Debug log
-            
-            const category = document.getElementById('expense-category').value.trim();
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const type = document.getElementById('expense-type').value;
-            
-            console.log('Category:', category, 'Amount:', amount, 'Type:', type); // Debug log
-
-            if (category && amount > 0) {
-                const newExpense = {
-                    id: Date.now(),
-                    category: category,
-                    amount: amount,
-                    type: type,
-                    createdAt: new Date().toISOString()
-                };
-
-                expenses.push(newExpense);
-                console.log('Expense added:', newExpense); // Debug log
-                saveData();
-                renderExpenses();
-                updateDashboard();
-                
-                // Reset form
-                document.getElementById('expense-form').reset();
-                
-                showNotification('Expense added successfully!', 'success');
             } else {
-                console.log('Invalid input - category or amount missing'); // Debug log
-                showNotification('Please enter both expense category and amount', 'error');
-            }
-        }
-
-        function renderExpenses() {
-            const container = document.getElementById('expense-list');
-            
-            if (expenses.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-400 py-4">
-                        <p>No expenses added yet</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = expenses.map(expense => `
-                <div class="bg-gray-800 p-4 rounded-lg fade-in">
-                    <div class="flex justify-between items-center mb-2">
-                        <div>
-                            <p class="font-semibold">${expense.category}</p>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xs px-2 py-1 rounded-full ${expense.type === 'fixed' ? 'bg-blue-600' : 'bg-yellow-600'}">${expense.type.toUpperCase()}</span>
-                                <span class="text-sm text-gray-400">${formatDate(expense.createdAt)}</span>
+                content.innerHTML = savedItems.map(item => `
+                    <div class="bg-gray-800 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold">${item.type === 'story' ? '📖' : '💕'} ${item.title}</h4>
+                                <p class="text-sm text-gray-400">${new Date(item.timestamp).toLocaleDateString()}</p>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-red-400 font-bold">$${expense.amount.toFixed(2)}</span>
-                            <button onclick="deleteExpense(${expense.id})" class="text-red-400 hover:text-red-300 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
+                            <button onclick="deleteItem(${item.id})" class="text-red-400 hover:text-red-300 transition-colors">
+                                🗑️
                             </button>
                         </div>
+                        <p class="text-gray-300 text-sm line-clamp-3">${item.content.substring(0, 150)}...</p>
+                        <button onclick="viewItem(${item.id})" class="mt-3 px-4 py-2 bg-orangered hover:bg-red-600 text-white rounded text-sm transition-colors">
+                            View Full
+                        </button>
                     </div>
-                </div>
-            `).join('');
-        }
-
-        function deleteExpense(id) {
-            expenses = expenses.filter(expense => expense.id !== id);
-            saveData();
-            renderExpenses();
-            updateDashboard();
-            showNotification('Expense deleted', 'info');
-        }
-
-        // Dashboard updates
-        function updateDashboard() {
-            const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
-            const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const netBalance = totalIncome - totalExpenses;
-            const savingsRate = totalIncome > 0 ? ((netBalance / totalIncome) * 100) : 0;
-
-            // Animate counter updates
-            animateCounter('total-income', totalIncome, '$');
-            animateCounter('total-expenses', totalExpenses, '$');
-            animateCounter('net-balance', netBalance, '$');
-            animateCounter('savings-rate', savingsRate, '%');
-
-            // Update budget health
-            updateBudgetHealth(totalIncome, totalExpenses, netBalance);
-            updateRecommendations(totalIncome, totalExpenses, savingsRate);
-            updateCharts();
-        }
-
-        function animateCounter(elementId, targetValue, prefix = '') {
-            const element = document.getElementById(elementId);
-            const startValue = parseFloat(element.textContent.replace(/[^0-9.-]/g, '')) || 0;
-            const duration = 1000;
-            const startTime = performance.now();
-
-            function updateCounter(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                const currentValue = startValue + (targetValue - startValue) * progress;
-                
-                if (prefix === '$') {
-                    element.textContent = `$${currentValue.toFixed(2)}`;
-                } else if (prefix === '%') {
-                    element.textContent = `${currentValue.toFixed(1)}%`;
-                } else {
-                    element.textContent = currentValue.toFixed(2);
-                }
-
-                if (progress < 1) {
-                    requestAnimationFrame(updateCounter);
-                }
-            }
-
-            requestAnimationFrame(updateCounter);
-        }
-
-        function updateBudgetHealth(income, expenses, balance) {
-            const healthPercent = income > 0 ? Math.max(0, Math.min(100, (balance / income) * 100)) : 0;
-            
-            document.getElementById('budget-health-percent').textContent = `${healthPercent.toFixed(1)}%`;
-            document.getElementById('budget-health-bar').style.width = `${healthPercent}%`;
-            
-            let status, color;
-            if (healthPercent >= 20) {
-                status = 'Excellent! You\'re saving well.';
-                color = 'text-green-400';
-            } else if (healthPercent >= 10) {
-                status = 'Good budget management.';
-                color = 'text-yellow-400';
-            } else if (healthPercent >= 0) {
-                status = 'Consider reducing expenses.';
-                color = 'text-orange-400';
-            } else {
-                status = 'Budget deficit - immediate action needed!';
-                color = 'text-red-400';
+                `).join('');
             }
             
-            const statusElement = document.getElementById('budget-status');
-            statusElement.textContent = status;
-            statusElement.className = `text-sm mt-2 ${color}`;
+            modal.classList.remove('hidden');
         }
 
-        function updateRecommendations(income, expenses, savingsRate) {
-            const recommendations = [];
-            
-            if (income === 0) {
-                recommendations.push('• Add your income sources to get started');
-            }
-            
-            if (expenses === 0) {
-                recommendations.push('• Track your monthly expenses');
-            }
-            
-            if (savingsRate < 10) {
-                recommendations.push('• Try to save at least 10% of your income');
-            }
-            
-            if (savingsRate < 20 && savingsRate >= 10) {
-                recommendations.push('• Great start! Aim for 20% savings rate');
-            }
-            
-            if (savingsRate >= 20) {
-                recommendations.push('• Excellent savings rate! Consider investing');
-            }
-            
-            const fixedExpenses = expenses.filter(e => e.type === 'fixed').reduce((sum, e) => sum + e.amount, 0);
-            if (fixedExpenses > income * 0.5) {
-                recommendations.push('• Fixed expenses are high - review subscriptions');
-            }
-            
-            if (recommendations.length === 0) {
-                recommendations.push('• Your budget looks healthy!');
-                recommendations.push('• Consider setting long-term financial goals');
-            }
-            
-            document.getElementById('recommendations').innerHTML = recommendations.join('<br>');
+        function closeHistory() {
+            document.getElementById('history-modal').classList.add('hidden');
         }
 
-        // Charts
-        function initializeCharts() {
-            const ctx1 = document.getElementById('expense-chart').getContext('2d');
-            const ctx2 = document.getElementById('comparison-chart').getContext('2d');
-
-            expenseChart = new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#FF4500', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#ffffff' }
-                        }
-                    }
-                }
-            });
-
-            comparisonChart = new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ['Income', 'Expenses', 'Savings'],
-                    datasets: [{
-                        data: [0, 0, 0],
-                        backgroundColor: ['#10b981', '#ef4444', '#FF4500']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#ffffff' }
-                        },
-                        x: {
-                            ticks: { color: '#ffffff' }
-                        }
-                    }
-                }
-            });
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                savedItems = savedItems.filter(item => item.id !== id);
+                localStorage.setItem('nexora-saved-items', JSON.stringify(savedItems));
+                showHistory(); // Refresh the display
+                showNotification('Item deleted! 🗑️', 'info');
+            }
         }
 
-        function updateCharts() {
-            // Update expense chart
-            const expenseCategories = {};
-            expenses.forEach(expense => {
-                expenseCategories[expense.category] = (expenseCategories[expense.category] || 0) + expense.amount;
-            });
-
-            expenseChart.data.labels = Object.keys(expenseCategories);
-            expenseChart.data.datasets[0].data = Object.values(expenseCategories);
-            expenseChart.update();
-
-            // Update comparison chart
-            const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
-            const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const savings = totalIncome - totalExpenses;
-
-            comparisonChart.data.datasets[0].data = [totalIncome, totalExpenses, Math.max(0, savings)];
-            comparisonChart.update();
-        }
-
-        // Goal setting
-        function setGoal() {
-            document.getElementById('goal-modal').classList.remove('hidden');
-        }
-
-        function closeGoalModal() {
-            document.getElementById('goal-modal').classList.add('hidden');
-        }
-
-        function setSavingsGoal(e) {
-            e.preventDefault();
-            const amount = parseFloat(document.getElementById('goal-amount').value);
-            const date = document.getElementById('goal-date').value;
-
-            savingsGoal = { amount, date };
-            localStorage.setItem('nexora-goal', JSON.stringify(savingsGoal));
-            
-            closeGoalModal();
-            showNotification('Savings goal set successfully!', 'success');
+        function viewItem(id) {
+            const item = savedItems.find(i => i.id === id);
+            if (item) {
+                currentResult = item.content;
+                currentMode = item.type;
+                showResult(item.content, item.title, item.type === 'story' ? '📖' : '💕');
+                closeHistory();
+            }
         }
 
         // Utility functions
-        function saveData() {
-            localStorage.setItem('nexora-incomes', JSON.stringify(incomes));
-            localStorage.setItem('nexora-expenses', JSON.stringify(expenses));
+        function showLoading(message) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-overlay';
+            loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            loadingDiv.innerHTML = `
+                <div class="bg-gray-900 rounded-2xl p-8 text-center">
+                    <div class="text-6xl mb-4 pulse-animation">✨</div>
+                    <h3 class="text-xl font-bold mb-2">${message}</h3>
+                    <div class="flex justify-center space-x-1">
+                        <div class="w-2 h-2 bg-orangered rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-orangered rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-orangered rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(loadingDiv);
         }
 
-        function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString();
+        function hideLoading() {
+            const loading = document.getElementById('loading-overlay');
+            if (loading) {
+                loading.remove();
+            }
         }
 
         function showNotification(message, type) {
-            // Create notification element
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 slide-up ${
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 fade-in ${
                 type === 'success' ? 'bg-green-600' : 
-                type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+                type === 'error' ? 'bg-red-600' : 
+                type === 'info' ? 'bg-blue-600' : 'bg-gray-600'
             }`;
             notification.textContent = message;
             
@@ -655,82 +614,16 @@
             }, 3000);
         }
 
-        function exportData() {
-            const data = {
-                incomes,
-                expenses,
-                savingsGoal,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'nexora-budget-data.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            showNotification('Data exported successfully!', 'success');
-        }
-
-        function resetCalculator() {
-            if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
-                incomes = [];
-                expenses = [];
-                savingsGoal = null;
-                
-                localStorage.removeItem('nexora-incomes');
-                localStorage.removeItem('nexora-expenses');
-                localStorage.removeItem('nexora-goal');
-                
-                renderIncomes();
-                renderExpenses();
-                updateDashboard();
-                
-                showNotification('All data has been reset', 'info');
-            }
-        }
-
-        function generateReport() {
-            const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
-            const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const netBalance = totalIncome - totalExpenses;
-            
-            const report = `
-NExora Budget Report
-Generated: ${new Date().toLocaleDateString()}
-
-SUMMARY:
-Total Income: $${totalIncome.toFixed(2)}
-Total Expenses: $${totalExpenses.toFixed(2)}
-Net Balance: $${netBalance.toFixed(2)}
-Savings Rate: ${totalIncome > 0 ? ((netBalance / totalIncome) * 100).toFixed(1) : 0}%
-
-INCOME SOURCES:
-${incomes.map(income => `• ${income.source}: $${income.amount.toFixed(2)}`).join('\n')}
-
-EXPENSES:
-${expenses.map(expense => `• ${expense.category} (${expense.type}): $${expense.amount.toFixed(2)}`).join('\n')}
-            `;
-            
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'nexora-budget-report.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            showNotification('Report generated successfully!', 'success');
+        function toggleTheme() {
+            showNotification('Theme switching coming soon! 🌙', 'info');
         }
 
         // Close modal on outside click
-        document.getElementById('goal-modal').addEventListener('click', function(e) {
+        document.getElementById('history-modal').addEventListener('click', function(e) {
             if (e.target === this) {
-                closeGoalModal();
+                closeHistory();
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'968bf1c283ee0088',t:'MTc1NDEyMDYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'968c0774d63e0088',t:'MTc1NDEyMTQ5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
